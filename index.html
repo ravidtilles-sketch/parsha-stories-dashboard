@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parsha Stories — Find an Episode</title>
+<style>
+  :root {
+    --bg: #faf7f2;
+    --card-bg: #ffffff;
+    --ink: #2b2420;
+    --ink-soft: #6b5f54;
+    --accent: #1a6b4f;
+    --accent-dark: #124d38;
+    --border: #e6ddd0;
+    --chip-bg: #f1ece1;
+    --chip-bg-hover: #e6ddd0;
+    --spotify-green: #1DB954;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  header {
+    padding: 2rem 1.25rem 1.25rem;
+    text-align: center;
+  }
+  header h1 {
+    margin: 0 0 0.25rem;
+    font-size: 1.75rem;
+    color: var(--accent-dark);
+  }
+  header p {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 1.25rem 3rem;
+  }
+  .search-wrap {
+    position: relative;
+    margin-bottom: 1rem;
+  }
+  #search {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    font-size: 1.05rem;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    background: var(--card-bg);
+    color: var(--ink);
+  }
+  #search:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  #suggestions {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    max-height: 320px;
+    overflow-y: auto;
+    z-index: 10;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    display: none;
+  }
+  #suggestions.open { display: block; }
+  .suggestion {
+    padding: 0.7rem 1rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .suggestion:hover, .suggestion.active {
+    background: var(--chip-bg);
+  }
+  .suggestion .count {
+    color: var(--ink-soft);
+    font-size: 0.85rem;
+  }
+  .quick-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.75rem;
+  }
+  .quick-links button {
+    font-size: 0.85rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--chip-bg);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .quick-links button:hover { background: var(--chip-bg-hover); }
+  #results {
+    display: none;
+  }
+  #results.open { display: block; }
+  #results h2 {
+    color: var(--accent-dark);
+    font-size: 1.4rem;
+    margin: 0 0 1rem;
+  }
+  .episode-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.1rem 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .episode-card h3 {
+    margin: 0 0 0.2rem;
+    font-size: 1.05rem;
+  }
+  .episode-date {
+    color: var(--ink-soft);
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+  }
+  .episode-desc {
+    font-size: 0.92rem;
+    color: var(--ink);
+    margin-bottom: 0.75rem;
+  }
+  .episode-desc p { margin: 0 0 0.5rem; }
+  .episode-desc a { color: var(--accent); }
+  .spotify-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--spotify-green);
+    color: white;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.45rem 0.9rem;
+    border-radius: 999px;
+  }
+  .spotify-link:hover { opacity: 0.9; }
+  #empty-state {
+    color: var(--ink-soft);
+    text-align: center;
+    padding: 2rem 0;
+    display: none;
+  }
+  #empty-state.open { display: block; }
+  footer {
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 0.8rem;
+    padding: 1.5rem 1rem 2rem;
+  }
+  footer a { color: var(--accent); }
+  #back-btn {
+    display: none;
+    margin-bottom: 1rem;
+    background: none;
+    border: none;
+    color: var(--accent-dark);
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 0;
+  }
+  #back-btn.open { display: inline-block; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🕎 Parsha Stories</h1>
+  <p>Find every episode about this week's Parsha (or a holiday) in one place.</p>
+</header>
+<main>
+  <div class="search-wrap">
+    <input type="text" id="search" placeholder="Type a Parsha or holiday name…" autocomplete="off">
+    <div id="suggestions"></div>
+  </div>
+  <div class="quick-links" id="quick-links"></div>
+
+  <button id="back-btn">&larr; Back to search</button>
+  <div id="results">
+    <h2 id="results-title"></h2>
+    <div id="results-list"></div>
+  </div>
+  <div id="empty-state">No episodes found for that search yet.</div>
+</main>
+<footer>
+  Episodes pulled automatically from <a href="https://open.spotify.com/show/7Ds6zNqDJBLRcWucjkXALj" target="_blank" rel="noopener noreferrer">Parsha Stories on Spotify</a>.
+  <span id="updated-at"></span>
+</footer>
+
+<script>
+async function init() {
+  const res = await fetch('data/episodes.json', { cache: 'no-store' });
+  const data = await res.json();
+
+  const searchEl = document.getElementById('search');
+  const suggestionsEl = document.getElementById('suggestions');
+  const resultsEl = document.getElementById('results');
+  const resultsTitleEl = document.getElementById('results-title');
+  const resultsListEl = document.getElementById('results-list');
+  const emptyStateEl = document.getElementById('empty-state');
+  const backBtn = document.getElementById('back-btn');
+  const quickLinksEl = document.getElementById('quick-links');
+
+  // Build the searchable list: every Parsha in Torah order, then holidays.
+  const entries = [];
+  data.parsha_order.forEach(name => {
+    if (data.parshiot[name]) entries.push({ name, kind: 'parsha', count: data.parshiot[name].length });
+  });
+  data.holiday_order.forEach(name => {
+    if (data.holidays[name]) entries.push({ name, kind: 'holiday', count: data.holidays[name].length });
+  });
+
+  function getEpisodes(entry) {
+    return entry.kind === 'parsha' ? data.parshiot[entry.name] : data.holidays[entry.name];
+  }
+
+  function normalize(s) {
+    return s.toLowerCase().replace(/['".]/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
+  }
+
+  function renderSuggestions(query) {
+    const norm = normalize(query);
+    if (!norm) {
+      suggestionsEl.classList.remove('open');
+      suggestionsEl.innerHTML = '';
+      return;
+    }
+    const matches = entries.filter(e => normalize(e.name).includes(norm)).slice(0, 12);
+    if (matches.length === 0) {
+      suggestionsEl.classList.remove('open');
+      suggestionsEl.innerHTML = '';
+      return;
+    }
+    suggestionsEl.innerHTML = matches.map(e =>
+      `<div class="suggestion" data-name="${e.name}" data-kind="${e.kind}">
+        <span>${e.name}${e.kind === 'holiday' ? ' 🕎' : ''}</span>
+        <span class="count">${e.count} episode${e.count === 1 ? '' : 's'}</span>
+      </div>`
+    ).join('');
+    suggestionsEl.classList.add('open');
+    suggestionsEl.querySelectorAll('.suggestion').forEach(el => {
+      el.addEventListener('click', () => {
+        showResults(el.dataset.name, el.dataset.kind);
+      });
+    });
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function showResults(name, kind) {
+    const entry = entries.find(e => e.name === name && e.kind === kind);
+    if (!entry) return;
+    const episodes = getEpisodes(entry);
+
+    searchEl.value = name;
+    suggestionsEl.classList.remove('open');
+    quickLinksEl.style.display = 'none';
+    searchEl.parentElement.style.display = 'none';
+    backBtn.classList.add('open');
+
+    resultsTitleEl.textContent = name;
+    resultsListEl.innerHTML = episodes.map(ep => `
+      <div class="episode-card">
+        <h3>${escapeHtml(ep.title)}</h3>
+        <div class="episode-date">${formatDate(ep.release_date)}</div>
+        <div class="episode-desc">${ep.description}</div>
+        <a class="spotify-link" href="${ep.url}" target="_blank" rel="noopener noreferrer">▶ Listen on Spotify</a>
+      </div>
+    `).join('');
+    resultsEl.classList.add('open');
+    emptyStateEl.classList.remove('open');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function formatDate(dateStr) {
+    const d = new Date(dateStr + 'T00:00:00');
+    return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  }
+
+  function reset() {
+    searchEl.value = '';
+    searchEl.parentElement.style.display = '';
+    quickLinksEl.style.display = '';
+    resultsEl.classList.remove('open');
+    backBtn.classList.remove('open');
+    suggestionsEl.classList.remove('open');
+    searchEl.focus();
+  }
+
+  backBtn.addEventListener('click', reset);
+
+  searchEl.addEventListener('input', () => renderSuggestions(searchEl.value));
+  searchEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const norm = normalize(searchEl.value);
+      const exact = entries.find(en => normalize(en.name) === norm);
+      const first = entries.find(en => normalize(en.name).includes(norm));
+      const match = exact || first;
+      if (match) showResults(match.name, match.kind);
+    }
+  });
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.search-wrap')) suggestionsEl.classList.remove('open');
+  });
+
+  // Quick links: this week's likely upcoming Parshiot aren't computed here
+  // (no fixed calendar mapping without a Hebrew calendar library), so instead
+  // show a handful of frequently-searched shortcuts: current Torah reading
+  // cycle order isn't known client-side, so just offer holidays + a hint.
+  quickLinksEl.innerHTML = data.holiday_order
+    .filter(h => data.holidays[h])
+    .map(h => `<button data-name="${h}" data-kind="holiday">${h}</button>`)
+    .join('');
+  quickLinksEl.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => showResults(btn.dataset.name, btn.dataset.kind));
+  });
+
+  document.getElementById('updated-at').textContent = data.generated_at
+    ? `Last updated ${new Date(data.generated_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}.`
+    : '';
+}
+
+init();
+</script>
+</body>
+</html>
