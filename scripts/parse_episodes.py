@@ -32,50 +32,62 @@ EXTRA_HOLIDAY_KEYWORDS = {
 
 
 class DescriptionSanitizer(HTMLParser):
-    """Allowlist-based sanitizer: keeps only <a href="http(s)://...">,
-    <p>, and <br> tags from Spotify's html_description field; everything
-    else is stripped or HTML-escaped."""
+    """Strips Spotify's html_description down to plain narrative text.
+    Every <a> tag in this feed is a "click here for a related episode"
+    cross-reference (never real content mixed into a sentence), so the
+    whole link -- markup and text alike -- is dropped. Only <p>/<br>
+    structure is kept; everything else is escaped or discarded."""
 
-    ALLOWED_TAGS = {"a", "p", "br"}
+    ALLOWED_TAGS = {"p", "br"}
 
     def __init__(self):
         super().__init__(convert_charrefs=True)
         self.out = []
+        self.skip_depth = 0
 
     def handle_starttag(self, tag, attrs):
-        if tag not in self.ALLOWED_TAGS:
-            return
         if tag == "a":
-            href = dict(attrs).get("href", "")
-            if href.startswith("http://") or href.startswith("https://"):
-                safe_href = href.replace('"', "%22")
-                self.out.append(f'<a href="{safe_href}" target="_blank" rel="noopener noreferrer">')
-        elif tag == "p":
+            self.skip_depth += 1
+            return
+        if self.skip_depth:
+            return
+        if tag == "p":
             self.out.append("<p>")
         elif tag == "br":
             self.out.append("<br>")
 
     def handle_endtag(self, tag):
+        if tag == "a":
+            self.skip_depth = max(0, self.skip_depth - 1)
+            return
+        if self.skip_depth:
+            return
         if tag in self.ALLOWED_TAGS and tag != "br":
             self.out.append(f"</{tag}>")
 
     def handle_data(self, data):
+        if self.skip_depth:
+            return
         escaped = (data.replace("&", "&amp;").replace("<", "&lt;")
                    .replace(">", "&gt;"))
         self.out.append(escaped)
 
     def get_html(self):
-        return "".join(self.out).strip()
+        html = "".join(self.out)
+        # Collapse whatever whitespace/empty markup the removed links left behind.
+        html = re.sub(r"(<br>\s*)+", "<br>", html)
+        html = re.sub(r"<p>\s*(<br>\s*)*</p>", "", html)
+        html = re.sub(r"^(\s*<br>\s*)+", "", html)
+        html = re.sub(r"(\s*<br>\s*)+$", "", html)
+        return html.strip()
 
 
 def sanitize_description(html_description: str, plain_fallback: str) -> str:
     if not html_description:
-        escaped = (plain_fallback or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-        return escaped
+        return ""
     parser = DescriptionSanitizer()
     parser.feed(html_description)
-    result = parser.get_html()
-    return result or (plain_fallback or "")
+    return parser.get_html()
 
 
 def normalize(text: str) -> str:

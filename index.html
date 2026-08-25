@@ -4,140 +4,249 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Parsha Stories — Find an Episode</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #faf7f2;
-    --card-bg: #ffffff;
-    --ink: #2b2420;
-    --ink-soft: #6b5f54;
-    --accent: #1a6b4f;
-    --accent-dark: #124d38;
-    --border: #e6ddd0;
-    --chip-bg: #f1ece1;
-    --chip-bg-hover: #e6ddd0;
+    --bg-1: #fff3e0;
+    --bg-2: #ffe8d6;
+    --ink: #3a2e26;
+    --ink-soft: #7a685c;
+    --card-bg: #fffdf9;
+    --border: #f0ddc8;
     --spotify-green: #1DB954;
+
+    --sunset: #ff6b6b;
+    --sunset-dark: #e85555;
+    --mango: #ffb703;
+    --mango-dark: #e29e00;
+    --teal: #2ec4b6;
+    --teal-dark: #219d92;
+    --violet: #9b5de5;
+    --violet-dark: #7d3fc9;
+    --sky: #3a86ff;
+    --sky-dark: #2667cc;
+    --gold: #f4a300;
+    --gold-dark: #cf8a00;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: var(--bg);
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: radial-gradient(circle at 15% 0%, var(--bg-2) 0%, var(--bg-1) 45%, var(--bg-1) 100%);
     color: var(--ink);
-    line-height: 1.5;
+    line-height: 1.55;
+    min-height: 100vh;
+  }
+  h1, h2, h3, .title-font {
+    font-family: 'Baloo 2', 'Nunito', sans-serif;
   }
   header {
-    padding: 2rem 1.25rem 1.25rem;
+    padding: 2.5rem 1.25rem 1.5rem;
     text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .floaty {
+    position: absolute;
+    font-size: 1.8rem;
+    opacity: 0.55;
+    animation: bob 5s ease-in-out infinite;
+    user-select: none;
+    pointer-events: none;
+  }
+  @keyframes bob {
+    0%, 100% { transform: translateY(0) rotate(-4deg); }
+    50% { transform: translateY(-10px) rotate(4deg); }
+  }
+  .logo-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--mango), var(--sunset));
+    font-size: 2.1rem;
+    box-shadow: 0 8px 18px rgba(230, 120, 40, 0.35);
+    margin-bottom: 0.6rem;
   }
   header h1 {
-    margin: 0 0 0.25rem;
-    font-size: 1.75rem;
-    color: var(--accent-dark);
+    margin: 0 0 0.35rem;
+    font-size: 2.1rem;
+    font-weight: 800;
+    color: var(--sunset-dark);
+    letter-spacing: 0.2px;
   }
   header p {
     margin: 0;
     color: var(--ink-soft);
-    font-size: 0.95rem;
+    font-size: 1.02rem;
+    font-weight: 600;
   }
   main {
-    max-width: 760px;
+    max-width: 780px;
     margin: 0 auto;
     padding: 0 1.25rem 3rem;
+    position: relative;
   }
   .search-wrap {
     position: relative;
-    margin-bottom: 1rem;
+    margin-bottom: 1.1rem;
   }
   #search {
     width: 100%;
-    padding: 0.9rem 1rem;
-    font-size: 1.05rem;
-    border: 2px solid var(--border);
-    border-radius: 10px;
-    background: var(--card-bg);
+    padding: 1.05rem 1.3rem 1.05rem 3.1rem;
+    font-size: 1.1rem;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    border: 3px solid var(--border);
+    border-radius: 18px;
+    background: var(--card-bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e85555' stroke-width='3' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") no-repeat 1.1rem center;
+    background-size: 1.3rem;
     color: var(--ink);
+    box-shadow: 0 6px 16px rgba(120, 80, 40, 0.08);
+    transition: border-color 0.15s, transform 0.15s;
   }
   #search:focus {
     outline: none;
-    border-color: var(--accent);
+    border-color: var(--sunset);
+    transform: translateY(-1px);
   }
   #suggestions {
     position: absolute;
-    top: calc(100% + 4px);
+    top: calc(100% + 8px);
     left: 0;
     right: 0;
     background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    max-height: 320px;
+    border: 3px solid var(--border);
+    border-radius: 18px;
+    max-height: 340px;
     overflow-y: auto;
     z-index: 10;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    box-shadow: 0 14px 30px rgba(90, 60, 30, 0.15);
     display: none;
   }
   #suggestions.open { display: block; }
   .suggestion {
-    padding: 0.7rem 1rem;
+    padding: 0.8rem 1.1rem;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
+    align-items: center;
+    font-weight: 700;
+    border-bottom: 1px solid var(--border);
   }
+  .suggestion:last-child { border-bottom: none; }
   .suggestion:hover, .suggestion.active {
-    background: var(--chip-bg);
+    background: var(--bg-2);
   }
   .suggestion .count {
     color: var(--ink-soft);
-    font-size: 0.85rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    background: var(--bg-1);
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+  }
+  .section-label {
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+    margin: 0.2rem 0.15rem 0.5rem;
   }
   .quick-links {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 0.55rem;
     margin-bottom: 1.75rem;
   }
   .quick-links button {
-    font-size: 0.85rem;
-    padding: 0.35rem 0.75rem;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 800;
+    padding: 0.5rem 1rem;
     border-radius: 999px;
-    border: 1px solid var(--border);
-    background: var(--chip-bg);
-    color: var(--ink);
+    border: none;
+    color: white;
     cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+    transition: transform 0.12s;
   }
-  .quick-links button:hover { background: var(--chip-bg-hover); }
-  #results {
-    display: none;
+  .quick-links button:hover { transform: translateY(-2px) scale(1.03); }
+  .quick-links button:active { transform: translateY(0) scale(0.98); }
+
+  #results { display: none; }
+  #results.open { display: block; animation: fadeIn 0.25s ease; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
   }
-  #results.open { display: block; }
+  #results-header {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin: 0 0 1.1rem;
+  }
+  #results-icon {
+    font-size: 1.9rem;
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+  }
   #results h2 {
-    color: var(--accent-dark);
-    font-size: 1.4rem;
-    margin: 0 0 1rem;
+    font-size: 1.55rem;
+    font-weight: 800;
+    margin: 0;
+    color: var(--ink);
+  }
+  #results-sub {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    font-weight: 700;
+    margin: 0.1rem 0 0;
   }
   .episode-card {
     background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.1rem 1.25rem;
+    border: none;
+    border-left: 7px solid var(--sunset);
+    border-radius: 16px;
+    padding: 1.2rem 1.35rem;
     margin-bottom: 1rem;
+    box-shadow: 0 6px 16px rgba(90, 60, 30, 0.08);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .episode-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(90, 60, 30, 0.14);
   }
   .episode-card h3 {
-    margin: 0 0 0.2rem;
-    font-size: 1.05rem;
+    margin: 0 0 0.25rem;
+    font-size: 1.12rem;
+    font-weight: 700;
+    color: var(--ink);
   }
   .episode-date {
     color: var(--ink-soft);
     font-size: 0.8rem;
-    margin-bottom: 0.5rem;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
   }
   .episode-desc {
-    font-size: 0.92rem;
+    font-size: 0.95rem;
     color: var(--ink);
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.85rem;
   }
   .episode-desc p { margin: 0 0 0.5rem; }
-  .episode-desc a { color: var(--accent); }
+  .episode-desc p:last-child { margin-bottom: 0; }
   .spotify-link {
     display: inline-flex;
     align-items: center;
@@ -145,64 +254,113 @@
     background: var(--spotify-green);
     color: white;
     text-decoration: none;
-    font-size: 0.85rem;
-    font-weight: 600;
-    padding: 0.45rem 0.9rem;
+    font-size: 0.88rem;
+    font-weight: 800;
+    padding: 0.5rem 1.05rem;
     border-radius: 999px;
+    box-shadow: 0 4px 10px rgba(29, 185, 84, 0.35);
+    transition: transform 0.12s;
   }
-  .spotify-link:hover { opacity: 0.9; }
+  .spotify-link:hover { transform: translateY(-1px) scale(1.03); }
   #empty-state {
     color: var(--ink-soft);
     text-align: center;
-    padding: 2rem 0;
+    padding: 3rem 1rem;
+    font-weight: 700;
+    font-size: 1.05rem;
     display: none;
   }
   #empty-state.open { display: block; }
   footer {
     text-align: center;
     color: var(--ink-soft);
-    font-size: 0.8rem;
-    padding: 1.5rem 1rem 2rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 1.5rem 1rem 2.5rem;
   }
-  footer a { color: var(--accent); }
+  footer a { color: var(--sunset-dark); font-weight: 800; text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
   #back-btn {
     display: none;
-    margin-bottom: 1rem;
-    background: none;
-    border: none;
-    color: var(--accent-dark);
+    align-items: center;
+    gap: 0.35rem;
+    margin-bottom: 1.1rem;
+    background: var(--card-bg);
+    border: 2px solid var(--border);
+    color: var(--ink);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
     font-size: 0.9rem;
     cursor: pointer;
-    padding: 0;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
   }
-  #back-btn.open { display: inline-block; }
+  #back-btn.open { display: inline-flex; }
+  #back-btn:hover { background: var(--bg-2); }
+
+  @media (max-width: 480px) {
+    header h1 { font-size: 1.7rem; }
+    .logo-badge { width: 58px; height: 58px; font-size: 1.8rem; }
+  }
 </style>
 </head>
 <body>
 <header>
-  <h1>🕎 Parsha Stories</h1>
-  <p>Find every episode about this week's Parsha (or a holiday) in one place.</p>
+  <span class="floaty" style="top: 12px; left: 8%;">📜</span>
+  <span class="floaty" style="top: 55px; right: 10%; animation-delay: 1.2s;">✨</span>
+  <span class="floaty" style="top: 15px; right: 22%; animation-delay: 2.1s;">🕎</span>
+  <span class="floaty" style="top: 60px; left: 20%; animation-delay: 0.6s;">⭐</span>
+  <div class="logo-badge">📖</div>
+  <h1>Parsha Stories</h1>
+  <p>Type this week's Parsha (or a holiday) and find every episode about it!</p>
 </header>
 <main>
   <div class="search-wrap">
-    <input type="text" id="search" placeholder="Type a Parsha or holiday name…" autocomplete="off">
+    <input type="text" id="search" placeholder="Try “Noach” or “Purim”…" autocomplete="off">
     <div id="suggestions"></div>
   </div>
+  <div class="section-label" id="quick-links-label">🎉 Or jump to a holiday</div>
   <div class="quick-links" id="quick-links"></div>
 
   <button id="back-btn">&larr; Back to search</button>
   <div id="results">
-    <h2 id="results-title"></h2>
+    <div id="results-header">
+      <div id="results-icon"></div>
+      <div>
+        <h2 id="results-title"></h2>
+        <p id="results-sub"></p>
+      </div>
+    </div>
     <div id="results-list"></div>
   </div>
-  <div id="empty-state">No episodes found for that search yet.</div>
+  <div id="empty-state">🤔 No episodes found for that search yet.</div>
 </main>
 <footer>
-  Episodes pulled automatically from <a href="https://open.spotify.com/show/7Ds6zNqDJBLRcWucjkXALj" target="_blank" rel="noopener noreferrer">Parsha Stories on Spotify</a>.
-  <span id="updated-at"></span>
+  🎙️ Episodes pulled automatically from <a href="https://open.spotify.com/show/7Ds6zNqDJBLRcWucjkXALj" target="_blank" rel="noopener noreferrer">Parsha Stories on Spotify</a>.
+  <br><span id="updated-at"></span>
 </footer>
 
 <script>
+const SEFARIM = [
+  { name: "Bereishit", count: 12, color: "var(--sunset)", colorDark: "var(--sunset-dark)", icon: "🌍" },
+  { name: "Shemot",    count: 11, color: "var(--sky)",    colorDark: "var(--sky-dark)",    icon: "🌊" },
+  { name: "Vayikra",   count: 10, color: "var(--violet)", colorDark: "var(--violet-dark)", icon: "🕯️" },
+  { name: "Bamidbar",  count: 10, color: "var(--teal)",   colorDark: "var(--teal-dark)",   icon: "🏕️" },
+  { name: "Devarim",   count: 11, color: "var(--mango)",  colorDark: "var(--mango-dark)",  icon: "📜" },
+];
+const HOLIDAY_THEME = { color: "var(--gold)", colorDark: "var(--gold-dark)", icon: "🎉" };
+const HOLIDAY_CHIP_COLORS = ["var(--sunset)", "var(--sky)", "var(--violet)", "var(--teal)", "var(--mango)", "var(--gold)"];
+
+function themeForParsha(name, order) {
+  const idx = order.indexOf(name);
+  let cursor = 0;
+  for (const sefer of SEFARIM) {
+    if (idx < cursor + sefer.count) return sefer;
+    cursor += sefer.count;
+  }
+  return SEFARIM[0];
+}
+
 async function init() {
   const res = await fetch('data/episodes.json', { cache: 'no-store' });
   const data = await res.json();
@@ -210,13 +368,15 @@ async function init() {
   const searchEl = document.getElementById('search');
   const suggestionsEl = document.getElementById('suggestions');
   const resultsEl = document.getElementById('results');
+  const resultsIconEl = document.getElementById('results-icon');
   const resultsTitleEl = document.getElementById('results-title');
+  const resultsSubEl = document.getElementById('results-sub');
   const resultsListEl = document.getElementById('results-list');
   const emptyStateEl = document.getElementById('empty-state');
   const backBtn = document.getElementById('back-btn');
   const quickLinksEl = document.getElementById('quick-links');
+  const quickLinksLabelEl = document.getElementById('quick-links-label');
 
-  // Build the searchable list: every Parsha in Torah order, then holidays.
   const entries = [];
   data.parsha_order.forEach(name => {
     if (data.parshiot[name]) entries.push({ name, kind: 'parsha', count: data.parshiot[name].length });
@@ -227,6 +387,10 @@ async function init() {
 
   function getEpisodes(entry) {
     return entry.kind === 'parsha' ? data.parshiot[entry.name] : data.holidays[entry.name];
+  }
+
+  function themeFor(entry) {
+    return entry.kind === 'parsha' ? themeForParsha(entry.name, data.parsha_order) : HOLIDAY_THEME;
   }
 
   function normalize(s) {
@@ -246,12 +410,13 @@ async function init() {
       suggestionsEl.innerHTML = '';
       return;
     }
-    suggestionsEl.innerHTML = matches.map(e =>
-      `<div class="suggestion" data-name="${e.name}" data-kind="${e.kind}">
-        <span>${e.name}${e.kind === 'holiday' ? ' 🕎' : ''}</span>
+    suggestionsEl.innerHTML = matches.map(e => {
+      const theme = themeFor(e);
+      return `<div class="suggestion" data-name="${e.name}" data-kind="${e.kind}">
+        <span>${theme.icon} ${e.name}</span>
         <span class="count">${e.count} episode${e.count === 1 ? '' : 's'}</span>
-      </div>`
-    ).join('');
+      </div>`;
+    }).join('');
     suggestionsEl.classList.add('open');
     suggestionsEl.querySelectorAll('.suggestion').forEach(el => {
       el.addEventListener('click', () => {
@@ -268,19 +433,25 @@ async function init() {
     const entry = entries.find(e => e.name === name && e.kind === kind);
     if (!entry) return;
     const episodes = getEpisodes(entry);
+    const theme = themeFor(entry);
 
     searchEl.value = name;
     suggestionsEl.classList.remove('open');
     quickLinksEl.style.display = 'none';
+    quickLinksLabelEl.style.display = 'none';
     searchEl.parentElement.style.display = 'none';
     backBtn.classList.add('open');
 
+    resultsIconEl.textContent = theme.icon;
+    resultsIconEl.style.background = theme.color;
     resultsTitleEl.textContent = name;
+    resultsSubEl.textContent = `${episodes.length} episode${episodes.length === 1 ? '' : 's'} found`;
+
     resultsListEl.innerHTML = episodes.map(ep => `
-      <div class="episode-card">
+      <div class="episode-card" style="border-left-color:${theme.color}">
         <h3>${escapeHtml(ep.title)}</h3>
-        <div class="episode-date">${formatDate(ep.release_date)}</div>
-        <div class="episode-desc">${ep.description}</div>
+        <div class="episode-date">🗓️ ${formatDate(ep.release_date)}</div>
+        ${ep.description ? `<div class="episode-desc">${ep.description}</div>` : ''}
         <a class="spotify-link" href="${ep.url}" target="_blank" rel="noopener noreferrer">▶ Listen on Spotify</a>
       </div>
     `).join('');
@@ -298,6 +469,7 @@ async function init() {
     searchEl.value = '';
     searchEl.parentElement.style.display = '';
     quickLinksEl.style.display = '';
+    quickLinksLabelEl.style.display = '';
     resultsEl.classList.remove('open');
     backBtn.classList.remove('open');
     suggestionsEl.classList.remove('open');
@@ -320,13 +492,9 @@ async function init() {
     if (!e.target.closest('.search-wrap')) suggestionsEl.classList.remove('open');
   });
 
-  // Quick links: this week's likely upcoming Parshiot aren't computed here
-  // (no fixed calendar mapping without a Hebrew calendar library), so instead
-  // show a handful of frequently-searched shortcuts: current Torah reading
-  // cycle order isn't known client-side, so just offer holidays + a hint.
   quickLinksEl.innerHTML = data.holiday_order
     .filter(h => data.holidays[h])
-    .map(h => `<button data-name="${h}" data-kind="holiday">${h}</button>`)
+    .map((h, i) => `<button data-name="${h}" data-kind="holiday" style="background:${HOLIDAY_CHIP_COLORS[i % HOLIDAY_CHIP_COLORS.length]}">${h}</button>`)
     .join('');
   quickLinksEl.querySelectorAll('button').forEach(btn => {
     btn.addEventListener('click', () => showResults(btn.dataset.name, btn.dataset.kind));
