@@ -21,6 +21,7 @@ from parsha_data import (
     MANUAL_HOLIDAY_OVERRIDES,
     EXCLUDED_EPISODES,
 )
+from kid_blurbs import KID_BLURBS
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
@@ -254,14 +255,19 @@ def main():
     parshiot = {name: [] for name in PARSHA_ORDER}
     holidays = {name: [] for name in HOLIDAY_ORDER}
     unmatched = []
+    missing_kid_blurbs = []
 
     for ep in episodes:
         if ep["name"] in EXCLUDED_EPISODES:
             continue
         tags = tag_episode(ep)
+        kid_blurb = KID_BLURBS.get(ep["id"])
+        if kid_blurb is None:
+            missing_kid_blurbs.append((ep["id"], ep["name"]))
+        description = kid_blurb or sanitize_description(ep.get("html_description"), ep.get("description"))
         record = {
             "title": ep["name"],
-            "description": sanitize_description(ep.get("html_description"), ep.get("description")),
+            "description": description,
             "release_date": ep["release_date"],
             "url": ep["url"],
             "id": ep["id"],
@@ -299,6 +305,9 @@ def main():
     print(f"Unmatched: {len(unmatched)}")
     for u in unmatched:
         print("  -", u["title"])
+    print(f"Missing kid-friendly blurb (using raw description instead): {len(missing_kid_blurbs)}")
+    for id_, title in missing_kid_blurbs:
+        print(f"  - {id_}  {title}")
 
 
 if __name__ == "__main__":
