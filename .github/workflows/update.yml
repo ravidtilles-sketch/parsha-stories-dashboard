@@ -1,3 +1,4 @@
+# Refreshes episode data daily from Spotify
 name: Update episode data
 
 on:
