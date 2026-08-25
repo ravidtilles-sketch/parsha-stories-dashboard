@@ -214,6 +214,18 @@
     font-weight: 700;
     margin: 0.1rem 0 0;
   }
+  .this-week-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--mango), var(--sunset));
+    color: white;
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.22rem 0.65rem;
+    border-radius: 999px;
+    margin-bottom: 0.35rem;
+  }
   .episode-card {
     background: var(--card-bg);
     border: none;
@@ -312,7 +324,7 @@
   <span class="floaty" style="top: 60px; left: 20%; animation-delay: 0.6s;">⭐</span>
   <div class="logo-badge">📖</div>
   <h1>Parsha Stories</h1>
-  <p>Type this week's Parsha (or a holiday) and find every episode about it!</p>
+  <p>See this week's Parsha below, or search any other week or holiday!</p>
 </header>
 <main>
   <div class="search-wrap">
@@ -322,7 +334,7 @@
   <div class="section-label" id="quick-links-label">🎉 Or jump to a holiday</div>
   <div class="quick-links" id="quick-links"></div>
 
-  <button id="back-btn">&larr; Back to search</button>
+  <button id="back-btn">📅 Back to this week</button>
   <div id="results">
     <div id="results-header">
       <div id="results-icon"></div>
@@ -333,7 +345,7 @@
     </div>
     <div id="results-list"></div>
   </div>
-  <div id="empty-state">🤔 No episodes found for that search yet.</div>
+  <div id="empty-state">🔎 Search above to find episodes about any Parsha or holiday!</div>
 </main>
 <footer>
   🎙️ Episodes pulled automatically from <a href="https://open.spotify.com/show/7Ds6zNqDJBLRcWucjkXALj" target="_blank" rel="noopener noreferrer">Parsha Stories on Spotify</a>.
@@ -379,14 +391,19 @@ async function init() {
 
   const entries = [];
   data.parsha_order.forEach(name => {
-    if (data.parshiot[name]) entries.push({ name, kind: 'parsha', count: data.parshiot[name].length });
+    entries.push({ name, kind: 'parsha', count: (data.parshiot[name] || []).length });
   });
   data.holiday_order.forEach(name => {
     if (data.holidays[name]) entries.push({ name, kind: 'holiday', count: data.holidays[name].length });
   });
 
+  let currentParshaEntry = null;
+  if (data.current_parsha && data.parsha_order.includes(data.current_parsha.key)) {
+    currentParshaEntry = { name: data.current_parsha.key, display: data.current_parsha.display };
+  }
+
   function getEpisodes(entry) {
-    return entry.kind === 'parsha' ? data.parshiot[entry.name] : data.holidays[entry.name];
+    return (entry.kind === 'parsha' ? data.parshiot[entry.name] : data.holidays[entry.name]) || [];
   }
 
   function themeFor(entry) {
@@ -429,23 +446,25 @@ async function init() {
     return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
-  function showResults(name, kind) {
+  function showResults(name, kind, opts = {}) {
     const entry = entries.find(e => e.name === name && e.kind === kind);
     if (!entry) return;
     const episodes = getEpisodes(entry);
     const theme = themeFor(entry);
+    const isThisWeek = !!opts.isThisWeek;
+    const displayName = opts.displayName || name;
 
-    searchEl.value = name;
+    searchEl.value = isThisWeek ? '' : name;
     suggestionsEl.classList.remove('open');
-    quickLinksEl.style.display = 'none';
-    quickLinksLabelEl.style.display = 'none';
-    searchEl.parentElement.style.display = 'none';
-    backBtn.classList.add('open');
+    backBtn.classList.toggle('open', !isThisWeek && !!currentParshaEntry);
 
+    const badge = isThisWeek ? `<span class="this-week-badge">✨ This Week's Parsha</span><br>` : '';
     resultsIconEl.textContent = theme.icon;
     resultsIconEl.style.background = theme.color;
-    resultsTitleEl.textContent = name;
-    resultsSubEl.textContent = `${episodes.length} episode${episodes.length === 1 ? '' : 's'} found`;
+    resultsTitleEl.innerHTML = `${badge}${displayName}`;
+    resultsSubEl.textContent = episodes.length
+      ? `${episodes.length} episode${episodes.length === 1 ? '' : 's'} found`
+      : `No episodes yet for ${displayName} — check back soon!`;
 
     resultsListEl.innerHTML = episodes.map(ep => `
       <div class="episode-card" style="border-left-color:${theme.color}">
@@ -465,18 +484,22 @@ async function init() {
     return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   }
 
-  function reset() {
-    searchEl.value = '';
-    searchEl.parentElement.style.display = '';
-    quickLinksEl.style.display = '';
-    quickLinksLabelEl.style.display = '';
-    resultsEl.classList.remove('open');
-    backBtn.classList.remove('open');
+  function showThisWeek() {
+    if (currentParshaEntry) {
+      showResults(currentParshaEntry.name, 'parsha', {
+        isThisWeek: true,
+        displayName: currentParshaEntry.display,
+      });
+    } else {
+      searchEl.value = '';
+      resultsEl.classList.remove('open');
+      backBtn.classList.remove('open');
+      emptyStateEl.classList.add('open');
+    }
     suggestionsEl.classList.remove('open');
-    searchEl.focus();
   }
 
-  backBtn.addEventListener('click', reset);
+  backBtn.addEventListener('click', showThisWeek);
 
   searchEl.addEventListener('input', () => renderSuggestions(searchEl.value));
   searchEl.addEventListener('keydown', (e) => {
@@ -503,6 +526,8 @@ async function init() {
   document.getElementById('updated-at').textContent = data.generated_at
     ? `Last updated ${new Date(data.generated_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}.`
     : '';
+
+  showThisWeek();
 }
 
 init();

@@ -4,7 +4,9 @@ A searchable dashboard for the [Parsha Stories podcast](https://open.spotify.com
 
 ## How it stays up to date
 
-A GitHub Action (`.github/workflows/update.yml`) runs daily, re-fetches the episode list from Spotify's public API, re-tags each episode by Parsha/holiday, and commits the refreshed `data/episodes.json`. GitHub Pages serves whatever is on `main`, so the live site updates automatically within a few minutes of a new episode going up on Spotify.
+A GitHub Action (`.github/workflows/update.yml`) runs daily, re-fetches the episode list from Spotify's public API, re-tags each episode by Parsha/holiday, looks up the current week's Parsha via the [Hebcal API](https://www.hebcal.com/home/195/parashat-hashavua-api), and commits the refreshed `data/episodes.json`. GitHub Pages serves whatever is on `main`, so the live site updates automatically within a few minutes.
+
+The homepage always defaults to the current week's Parsha (even if no episode has been posted for it yet, in which case past years' episodes for that Parsha still show), and search/the holiday menu let you browse any other week.
 
 You can also trigger it manually from the repo's **Actions** tab → "Update episode data" → **Run workflow**.
 

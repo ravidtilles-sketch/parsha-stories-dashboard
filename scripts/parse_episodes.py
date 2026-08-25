@@ -9,7 +9,8 @@ Output: data/episodes.json      (grouped + tagged data for the dashboard)
 import json
 import re
 import unicodedata
-from datetime import datetime, timezone
+import urllib.request
+from datetime import datetime, timedelta, timezone
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -209,6 +210,44 @@ def tag_episode(ep: dict):
     return []
 
 
+def fetch_current_parsha():
+    """Looks up the Parsha for the upcoming (or current) Shabbat via the
+    Hebcal API, so the dashboard can default to "this week's" reading even
+    before an episode about it has been posted. Returns None on any failure
+    so the site still works if Hebcal is unreachable."""
+    try:
+        today = datetime.now(timezone.utc).date()
+        start = today.isoformat()
+        end = (today + timedelta(days=21)).isoformat()
+        url = (f"https://www.hebcal.com/hebcal?cfg=json&v=1&maj=off&min=off"
+               f"&mod=off&nx=off&s=on&start={start}&end={end}")
+        with urllib.request.urlopen(url, timeout=10) as resp:
+            data = json.load(resp)
+
+        for item in data.get("items", []):
+            if item.get("category") != "parashat":
+                continue
+            title = item["title"]
+            title = re.sub(r"^Parashat\s+", "", title, flags=re.IGNORECASE)
+            title = re.sub(r"^Parshat\s+", "", title, flags=re.IGNORECASE)
+            parts = re.split(r"[-–]", title)
+            canonical_parts = []
+            for part in parts:
+                result = lookup(part)
+                if result and result[0] == "parsha":
+                    canonical_parts.append(result[1])
+            if canonical_parts:
+                return {
+                    "key": canonical_parts[0],
+                    "display": "-".join(canonical_parts),
+                    "shabbat_date": item["date"],
+                }
+        return None
+    except Exception as e:
+        print(f"Could not fetch current Parsha from Hebcal: {e}")
+        return None
+
+
 def main():
     episodes = json.loads((DATA_DIR / "episodes_raw.json").read_text())
 
@@ -240,11 +279,14 @@ def main():
     for group in list(parshiot.values()) + list(holidays.values()):
         group.sort(key=lambda r: r["release_date"], reverse=True)
 
+    current_parsha = fetch_current_parsha()
+
     output = {
         "parshiot": {k: v for k, v in parshiot.items() if v},
         "parsha_order": PARSHA_ORDER,
         "holidays": {k: v for k, v in holidays.items() if v},
         "holiday_order": HOLIDAY_ORDER,
+        "current_parsha": current_parsha,
         "generated_at": datetime.now(timezone.utc).isoformat(),
     }
 
