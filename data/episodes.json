@@ -1283,6 +1283,13 @@
     ],
     "Ki Tavo": [
       {
+        "title": "Ki Tavo - Coming to a Clothes",
+        "description": "",
+        "release_date": "2026-08-28",
+        "url": "https://open.spotify.com/episode/2mArnNRS9ochwyOD6ULR3V",
+        "id": "2mArnNRS9ochwyOD6ULR3V"
+      },
+      {
         "title": "Ki Tavo - Count Your Blessings",
         "description": "Saying thank you for the harvest",
         "release_date": "2025-09-10",
@@ -1627,5 +1634,5 @@
     "display": "Ki Tavo",
     "shabbat_date": "2026-08-29"
   },
-  "generated_at": "2026-08-27T22:51:26.019102+00:00"
+  "generated_at": "2026-08-28T11:59:00.562215+00:00"
 }
