@@ -1,9 +1,9 @@
-# Refreshes episode data daily from Spotify
+# Refreshes episode data from Spotify every 15 minutes
 name: Update episode data
 
 on:
   schedule:
-    - cron: "0 13 * * *"
+    - cron: "*/15 * * * *"
   workflow_dispatch: {}
 
 permissions:
