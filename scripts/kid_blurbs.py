@@ -195,4 +195,5 @@ KID_BLURBS = {
     "6346b99ou86sggjDckweLZ": "Yummy oily Hanukkah treats",
     "7jyH1LurT6vRW9k60HSPww": "All about the etrog",
     "6MGsY40khaOEdaRISQyNoU": "Why the shofar sounds that way",
+    "2mArnNRS9ochwyOD6ULR3V": "Their clothes never wore out in the desert!",
 }
