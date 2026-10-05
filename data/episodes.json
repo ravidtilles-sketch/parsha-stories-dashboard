@@ -2,6 +2,13 @@
   "parshiot": {
     "Bereishit": [
       {
+        "title": "5:1 Bereishit - A Whole New World",
+        "description": "<p>The stories of the weekly Torah Portions (Parshas) like you've never heard them before! Listen for the stories and the beautiful messages of our ancient Torah texts as told by Rabbi Ravid Tilles. </p>",
+        "release_date": "2026-10-04",
+        "url": "https://open.spotify.com/episode/6hhkyapg5bNPmVBAQTHhGK",
+        "id": "6hhkyapg5bNPmVBAQTHhGK"
+      },
+      {
         "title": "Bereishit - Cain and Hevel",
         "description": "Cain and Abel, the first brothers",
         "release_date": "2025-10-17",
@@ -1634,5 +1641,5 @@
     "display": "Bereishit",
     "shabbat_date": "2026-10-10"
   },
-  "generated_at": "2026-10-04T23:49:24.591350+00:00"
+  "generated_at": "2026-10-05T04:05:59.819417+00:00"
 }
