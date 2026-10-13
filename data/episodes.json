@@ -39,6 +39,13 @@
     ],
     "Noach": [
       {
+        "title": "Noach - A Bad Storm",
+        "description": "<p>Noach and his family are model citizens in a difficult time and God presses the reset button on the earth with hopes that humans will all be like Noach. But then God feels some regret and decides that human beings should be as diverse as a rainbow. </p>",
+        "release_date": "2026-10-12",
+        "url": "https://open.spotify.com/episode/7CC8fOEyzDPHBR6Jkkh4zS",
+        "id": "7CC8fOEyzDPHBR6Jkkh4zS"
+      },
+      {
         "title": "Noach - Don't Leave Me",
         "description": "Noah, the ark, and the flood",
         "release_date": "2025-10-22",
@@ -1641,5 +1648,5 @@
     "display": "Noach",
     "shabbat_date": "2026-10-17"
   },
-  "generated_at": "2026-10-12T19:03:38.304343+00:00"
+  "generated_at": "2026-10-13T01:20:48.544920+00:00"
 }
