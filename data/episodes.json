@@ -106,6 +106,13 @@
     ],
     "Vayera": [
       {
+        "title": "Vayera - Testing 1,2,3 ",
+        "description": "<p>This week, Avraham's stories continue as he navigates God's tests. There is loss of life, but also new life born in this Parsha, as well as three mysterious strangers!</p>",
+        "release_date": "2026-10-26",
+        "url": "https://open.spotify.com/episode/3Oot6nZROmXnx4bR8bqk9p",
+        "id": "3Oot6nZROmXnx4bR8bqk9p"
+      },
+      {
         "title": "Vayera - The Evils of Sodom",
         "description": "Abraham argues to save a city",
         "release_date": "2025-11-06",
@@ -1655,5 +1662,5 @@
     "display": "Vayera",
     "shabbat_date": "2026-10-31"
   },
-  "generated_at": "2026-10-26T21:52:25.087254+00:00"
+  "generated_at": "2026-10-27T01:07:52.792503+00:00"
 }
