@@ -173,6 +173,13 @@
     ],
     "Toldot": [
       {
+        "title": "Toldot - What's Yours Is Mine",
+        "description": "<p>Yitzhak and Rivka are blessed with twin boys but favoritism, deception and short-sightedness leads to drama over God's blessing. </p>",
+        "release_date": "2026-11-09",
+        "url": "https://open.spotify.com/episode/0SQ6YNVXEVnaYYRe53CLAC",
+        "id": "0SQ6YNVXEVnaYYRe53CLAC"
+      },
+      {
         "title": "Toldot - Hunter Games",
         "description": "Jacob and Esau, two different brothers",
         "release_date": "2025-11-20",
@@ -1669,5 +1676,5 @@
     "display": "Toldot",
     "shabbat_date": "2026-11-14"
   },
-  "generated_at": "2026-11-09T19:48:30.501468+00:00"
+  "generated_at": "2026-11-10T02:32:41.673737+00:00"
 }
