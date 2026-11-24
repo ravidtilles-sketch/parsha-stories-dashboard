@@ -233,6 +233,13 @@
     ],
     "Vayishlach": [
       {
+        "title": "Vayishlach - There Can Only Be One Winner",
+        "description": "<p>Yakov is heading back to Canaan but not before he confronts his past when his brother approaches him. But before that happens, he's attacked by a mysterious figure who warms him up!</p>",
+        "release_date": "2026-11-24",
+        "url": "https://open.spotify.com/episode/2o9TZhWskvNMB79PXjOLZI",
+        "id": "2o9TZhWskvNMB79PXjOLZI"
+      },
+      {
         "title": "Vayishlach - With Special Guest: Ari Stern of The Tribe of Levi",
         "description": "Jacob wrestles all night long",
         "release_date": "2025-12-03",
@@ -1683,5 +1690,5 @@
     "display": "Vayishlach",
     "shabbat_date": "2026-11-28"
   },
-  "generated_at": "2026-11-23T22:48:50.415406+00:00"
+  "generated_at": "2026-11-24T06:44:27.081420+00:00"
 }
